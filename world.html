@@ -1,0 +1,136 @@
+<!-- https://vida.io/gists/vAcP7png3XMWs5XLs -->
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  width: 960px;
+  height: 500px;
+  position: relative;
+}
+
+svg {
+    margin: 5px;
+    background-color: #A7DBD8;
+}
+
+.boundary {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1px;
+}
+ .graticule {
+    fill: none;
+    stroke: #79A09E;
+    stroke-width: 1;
+    stroke-dasharray: 1,1;
+  }
+.country{
+  fill:cadetblue;
+  stroke: black;
+}
+#pieChart svg{
+  background-color: white;
+}
+</style>
+<div style="margin-left:150px">
+  <div style="float:left" id="canvas-svg"></div>
+  <div style=" float: left; width: 200px; margin-top: 111px;" id="pieChart">
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js"></script>
+<script>
+
+  var width = 600,
+      height = 400;
+
+  
+  var projection = d3.geo.mercator()
+      .scale((width + 1) / 2 / Math.PI)
+      .translate([width / 2, height / 2 + 80])
+      .precision(.1);
+  
+  var path = d3.geo.path()
+      .projection(projection);
+  
+  var graticule = d3.geo.graticule();
+  
+  var svg = d3.select("#canvas-svg").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+  
+  d3.json("https://s3-us-west-2.amazonaws.com/vida-public/geo/world-topo-min.json", function(error, world) {
+    var countries = topojson.feature(world, world.objects.countries).features;
+    var g = svg.append("g");
+    var country = g.selectAll(".country").data(countries);
+    country.enter().insert("path")
+        .attr("class", "country")
+        .attr("d", path)
+
+        .attr("id", function(d,i) { return d.id; })
+        .attr("title", function(d) { return d.properties.name; })
+        .on("click", function(d) {
+            d3.select(this).attr("fill-opacity", "0.2");
+            pieChart(d)
+        })
+        .on("mouseout", function() {
+                d3.select(this).attr("fill-opacity", "1.0");
+                // d3.selectAll("#pieChart svg").remove();
+        });
+  });
+function pieChart(country){
+  var w = 300,                        //width
+  h = 200,                            //height
+  r = 100,                            //radius
+  color = d3.scale.category20c();     //builtin range of colors
+  
+  data = [{"label":"192.168.1.1", "value":20}, 
+          {"label":"192.168.2.3", "value":50}, 
+          {"label":"192.168.4.3", "value":30}];
+  
+  var vis = d3.select('#pieChart')
+      .append("svg")              //create the SVG element inside the <body>
+      .data([data])                   //associate our data with the document
+          .attr("height", h)
+      .append("svg:g")                //make a group to hold our pie chart
+          .attr("transform", "translate(" + r + "," + r + ")")    //move the center of the pie chart from 0, 0 to radius, ra
+          
+          d3.select('#pieChart')
+          .append('svg')
+          .attr('height',16)
+          .append("svg:text")
+           .attr('text-anchor','start')
+          .attr('y',12)
+
+          .text(country.properties.name)
+
+  var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
+      .outerRadius(r);
+
+  var pie = d3.layout.pie()           //this will create arc data for us given a list of values
+      .value(function(d) { return d.value; }); 
+
+  var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
+  .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties) 
+  .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
+      .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
+          .attr("class", "slice");    //allow us to style things in the slices (like text)
+
+  arcs.append("svg:path")
+          .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
+          .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
+
+  arcs.append("svg:text")                                     //add a label to each slice
+          .attr("transform", function(d) {                    //set the label's origin to the center of the arc
+          //we have to make sure to set these before calling arc.centroid
+          d.innerRadius = 0;
+          d.outerRadius = r;
+          return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
+      })
+      .attr("text-anchor", "middle")                          //center the text on it's origin
+      .text(function(d, i) { return data[i].label; });        //get the label from our original data arra
+}
+
+</script>
