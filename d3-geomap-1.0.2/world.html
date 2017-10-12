@@ -1,0 +1,108 @@
+<!-- https://www.highcharts.com/maps/demo/rich-info/dark-unica -->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!-- <link href="css/d3-geomap/css/d3.geomap.css" rel="stylesheet"> -->
+        <style type="text/css">
+            text {
+  fill: #333;
+  font-size: 12px; }
+
+.background {
+  fill: none;
+  pointer-events: all; }
+
+.unit {
+  cursor: pointer;
+  fill: #ccc;
+  stroke: #000;
+  stroke-width: 0.4px; }
+
+.legend-bg {
+  fill: #fff;
+  fill-opacity: 0.8; }
+
+.legend-bar {
+  stroke: #333;
+  stroke-width: 1px; }
+        </style>
+        <script src="vendor/d3.geomap.dependencies.min.js"></script>
+        <script src="js/d3.geomap.min.js"></script>
+    
+    </head>
+    <body>
+        <div id="map"></div>
+        <div id="d3-test"><h1>Test head</h1><p>ram</p></div>
+
+            <script type="text/javascript">
+          
+            var map = d3.geomap().geofile('https://d3-geomap.github.io/d3-geomap/topojson/world/countries.json')
+            // .projection(console.log)
+              d3.select('#map')
+              .call(map.draw, map);
+              console.log(d3.geomap())
+          // d3.mouse(console.log)
+// d3.select('#d3-test').selectAll('p').data([1,2,3,4]).enter().append('p').text(function(d){return d + 'test'})
+
+//             var format = function(d) {
+//     d = d / 1000000;
+//     return d3.format(',.02f')(d) + 'M';
+// }
+
+// var map = d3.geomap.choropleth()
+//     .geofile('https://d3-geomap.github.io/d3-geomap/topojson/world/countries.json')
+//     .colors(colorbrewer.YlGnBu[9])
+//     .column('YR2010')
+//     .format(format)
+//     .legend({width:30,height:80})
+//     .unitId('Country Code')
+//     .unitTitle(function(data){
+//       return ("<p>sdfk</p>")
+//     })
+
+// d3.csv('https://d3-geomap.github.io/data/sp.pop.totl.csv', function(error, data) {
+//     var countries = d3.select('#map')
+//         .datum(data)
+//         .call(map.draw, map)
+
+        // .on('click',function(data,data1){
+        //   var coords = d3.mouse(this);
+        //   console.log(this,data1,data)
+        // })
+        // console.log(countries)
+    //     countries.append("circle")
+    // .attr("r", 3)
+    // .style("fill", "red");
+    // console.log(countries)
+    // countries.on('click',console.log)
+    // var pie = d3.pie()
+    // .sort(null)
+    // .value(function(d) { return d; });
+
+  //   var pie = function(d){return d}
+  //   var pies = countries.selectAll(".pies")
+  //   .data(pie([0,15,30,35,20]))
+  //   .enter()
+  //   .append('g')
+  //   .attr('class','arc');
+
+  //   pies.append("path")
+  // .attr('d',"arc")
+  // .attr("fill",function(d,i){
+  //      return colorbrewer.YlGnBu[9];      
+  //     });
+// });
+            // var marks = [{long: -75, lat: 43},{long: -78, lat: 41},{long: -70, lat: 53}];
+
+            // d3.selectAll(".mark")
+            // .data(marks)
+            // .enter()
+            // .append("image")
+            // .attr('class','mark')
+            // .attr('width', 20)
+            // .attr('height', 20)
+            // .attr("xlink:href",'https://cdn3.iconfinder.com/data/icons/softwaredemo/PNG/24x24/DrawingPin1_Blue.png')
+            // .attr("transform", function(d) {return "translate(" + d3.geomap().projection([d.long,d.lat]) + ")";});
+        </script>
+    </body>
+</html>
